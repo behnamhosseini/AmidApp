@@ -1,10 +1,11 @@
+import 'package:amid_app/introduction/introduction.dart';
+import 'package:amid_app/pages/easyBuyPanel/easy_buy_page.dart';
 import 'package:amid_app/pages/agriculture_page.dart';
 import 'package:amid_app/pages/amidabad_page.dart';
 import 'package:amid_app/pages/animal_husbandry_page.dart';
 import 'package:amid_app/pages/council_page.dart';
 import 'package:amid_app/pages/counter_page.dart';
 import 'package:amid_app/pages/doctor_page.dart';
-import 'package:amid_app/pages/easy_buy_page.dart';
 import 'package:amid_app/pages/english_institue_page.dart';
 import 'package:amid_app/pages/gallery_page.dart';
 import 'package:amid_app/pages/health_page.dart';
@@ -25,10 +26,8 @@ import 'package:flutter/services.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
@@ -39,10 +38,15 @@ class MyApp extends StatelessWidget {
       title: 'AmidApp',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'IranSans',
       ),
-      home: Directionality(child: HomePage(), textDirection: TextDirection.rtl,),
+      home:  Directionality(child: HomePage(), textDirection: TextDirection.rtl,),
+
+      // home: Directionality(child: Splash(), textDirection: TextDirection.rtl,),
       routes: {
+        '/home': (context) => Directionality(child: HomePage(), textDirection: TextDirection.rtl,),
         '/amidabad' : (context) => Directionality(child: AmidabadPage(), textDirection: TextDirection.rtl,),
+        '/introduction' : (context) => Directionality(child: Introduction(), textDirection: TextDirection.rtl,),
         '/municipality' : (context) => Directionality(child: MunicipalityPage(), textDirection: TextDirection.rtl,),
         '/council' : (context) => Directionality(child: CouncilPage(), textDirection: TextDirection.rtl,),
         '/postbank' : (context) => Directionality(child: PostbankPage(), textDirection: TextDirection.rtl,),

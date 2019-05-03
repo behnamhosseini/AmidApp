@@ -1,8 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:amid_app/server/post.dart';
 
 class NewsFeed extends StatefulWidget {
+  Map user;
+  NewsFeed({this.user});
   @override
   State<StatefulWidget> createState() {
     return NewsFeedState();
@@ -10,155 +13,330 @@ class NewsFeed extends StatefulWidget {
 }
 
 class NewsFeedState extends State<NewsFeed> {
+  GlobalKey scaffKey=GlobalKey<ScaffoldState>();
+  int currentIndex=0;
+  List posts;
+  int like;
+  @override
+  void initState() {
+    super.initState();
+    _getPosts();
+  }
+
+  removePost(index){
+    setState(() {
+      posts.removeAt(index);
+    });
+  }
+   _getPosts() async{
+    Map response =await Post().getPosts(scaffKey);
+     if(response['status']==200){
+       setState(() {
+         posts=response['data'];
+         currentIndex=1;
+       });
+     }else{
+       setState(() {
+         currentIndex=0;
+       });
+     }
+  }
   @override
   Widget build(BuildContext context) {
-     return Padding(
+     return Scaffold(
+       key: scaffKey,
+       body:Padding(
        padding: const EdgeInsets.only(bottom: 50),
-       child: ListView(
-         children: <Widget>[
-           instaPost,
-         ],
-       ),
-     );
-
-  }
+       child:
+       currentIndex == 0
+       ?Center(child: Text('در حال بارگذاری...'))
+       :ListView.builder(
+         itemCount: posts.length,
+         itemBuilder: (BuildContext context, int index) {
+           return PostBody(post:posts[index],user:widget.user,scaffKey:scaffKey, removePost : removePost, index : index);
+         },
+       )
+    ),
+     );}
 }
 
- final instaPost = new Column(
-    crossAxisAlignment : CrossAxisAlignment.stretch,
-    children: <Widget>[
-        Column(
-          children: <Widget>[
-                  new Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0 , 16.0, 8.0, 16.0),
-                        child: new Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            new Row(
-                              children: <Widget>[
-                                new Container(
-                                  margin: EdgeInsets.only(left : 8.0),
-                                  height: 40.0,
-                                  width: 40.0,
-                                  decoration: new BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image : new DecorationImage(
-                                          image: AssetImage('assets/images/library.png'),
-                                    )
-                                  ),
-                                ),
-                                Text(
-                                  "کتابخانه امیرکبیر",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                            new IconButton(icon: new Icon(Icons.more_vert), onPressed: null)
-                          ],
-                        ),
-                      ),
-                      new Row(
-                        children: <Widget>[
-                          new Expanded(
-                              child: Image.network(
-                                "https://kafebook.ir/wp-content/uploads/2018/12/%D8%A8%D8%B1%D8%A7%D8%AF%D8%B1%D8%A7%D9%86-%DA%A9%D8%A7%D8%B1%D8%A7%D9%85%D8%A7%D8%B2%D9%88%D9%81-770x480.jpg",
-                                fit: BoxFit.cover,
-                              )
-                          )
-                        ],
-                      ),
-                      new Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: new Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            new Row(
-                              children: <Widget>[
-                                new IconButton(icon: new Icon(FontAwesomeIcons.heart, color: Colors.black), onPressed: null),
-                                Text('22 نفر این پست را پسندیدند'),
-                                // new IconButton(icon: new Icon(FontAwesomeIcons.comment , color: Colors.black), onPressed: null),
-                                // new IconButton(icon: new Icon(FontAwesomeIcons.paperPlane , color: Colors.black), onPressed: null)
-                              ],
-                            ),
-                                Text("1 روز قبل" , style:  TextStyle(color: Colors.grey),),
-                              // new IconButton(icon: new Icon(FontAwesomeIcons.bookmark, color: Colors.black), onPressed: null)
-                          ],
-                        ),
-                      ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8,0,14,10),
-                            child: Text('رمان برادران کارامازوف آخرین اثر نویسنده بزرگ روس، فیودور داستایفسکی است. رمانی که داستایفسکی سه سال از آخرین سال‌های عمر خود را صرف نوشتن آن کرد. این رمان نهایتا در سال ۱۸۸۰ به پایان رسید و اگر نویسنده از دنیا نمی‌رفت قصد داشت داستان آن را ادامه دهد. به اعتقاد بسیارانی این رمان بزرگ‌ترین رمان داستایفسکی است.'),
-                          ),   
-                ],
-        ),
-        Divider(),
-        Column(
-          children: <Widget>[
-                  new Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0 , 16.0, 8.0, 16.0),
-                        child: new Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            new Row(
-                              children: <Widget>[
-                                new Container(
-                                  margin: EdgeInsets.only(left : 8.0),
-                                  height: 40.0,
-                                  width: 40.0,
-                                  decoration: new BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image : new DecorationImage(
-                                          image: AssetImage('assets/images/school.png'),
-                                    )
-                                  ),
-                                ),
-                                Text(
-                                  "مدرسه دانش",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                            new IconButton(icon: new Icon(Icons.more_vert), onPressed: null)
-                          ],
-                        ),
-                      ),
-                      new Row(
-                        children: <Widget>[
-                          new Expanded(
-                              child: Image.network(
-                                "https://kafebook.ir/wp-content/uploads/2018/12/%D8%A8%D8%B1%D8%A7%D8%AF%D8%B1%D8%A7%D9%86-%DA%A9%D8%A7%D8%B1%D8%A7%D9%85%D8%A7%D8%B2%D9%88%D9%81-770x480.jpg",
-                                fit: BoxFit.cover,
-                              )
-                          )
-                        ],
-                      ),
-                      new Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: new Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            new Row(
-                              children: <Widget>[
-                                new IconButton(icon: new Icon(FontAwesomeIcons.heart, color: Colors.black), onPressed: null),
-                                Text('22 نفر این پست را پسندیدند'),
-                                // new IconButton(icon: new Icon(FontAwesomeIcons.comment , color: Colors.black), onPressed: null),
-                                // new IconButton(icon: new Icon(FontAwesomeIcons.paperPlane , color: Colors.black), onPressed: null)
-                              ],
-                            ),
-                                Text("1 روز قبل" , style:  TextStyle(color: Colors.grey),),
-                              // new IconButton(icon: new Icon(FontAwesomeIcons.bookmark, color: Colors.black), onPressed: null)
-                          ],
-                        ),
-                      ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8,0,14,10),
-                            child: Text('رمان برادران کارامازوف آخرین اثر نویسنده بزرگ روس، فیودور داستایفسکی است. رمانی که داستایفسکی سه سال از آخرین سال‌های عمر خود را صرف نوشتن آن کرد. این رمان نهایتا در سال ۱۸۸۰ به پایان رسید و اگر نویسنده از دنیا نمی‌رفت قصد داشت داستان آن را ادامه دهد. به اعتقاد بسیارانی این رمان بزرگ‌ترین رمان داستایفسکی است.'),
-                          ),   
-                ],
-        ),
-        Divider(),
-    ],
-  );
+
 
 
   
+class PostBody extends StatefulWidget{
+  Map post;
+  Map user;
+  int index;
+  final removePost;
+  GlobalKey<ScaffoldState> scaffKey;
+
+  PostBody({this.post,this.user,this.scaffKey,this.removePost, this.index});
+  @override
+  State<StatefulWidget> createState() {
+    return PostBodyState();
+  }
+}
+
+class PostBodyState extends State<PostBody>{
+  bool liked;
+  List likesId;
+  int likeCount;
+  int allowLike;
+  bool edit;
+  String postBody;
+  TextEditingController _textEditingController;
+  GlobalKey<FormFieldState> textFormFieldKey = new GlobalKey();
+  @override
+  void initState() {
+    super.initState();
+    postBody=widget.post['body'];
+    allowLike = 0;
+    edit=false;
+    likesId = widget.post['likes_id'];
+    
+    widget.user != null
+    ? liked= likesId.contains(widget.user['id'])
+    : liked=false;
+    likeCount = widget.post['likes_count'];
+  }  
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+              crossAxisAlignment : CrossAxisAlignment.stretch,
+              children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                            new Padding(
+                                  padding: const EdgeInsets.fromLTRB(16.0 , 16.0, 8.0, 16.0),
+                                  child: new Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      new Row(
+                                        children: <Widget>[
+                                          new Container(
+                                            margin: EdgeInsets.only(left : 8.0),
+                                            height: 40.0,
+                                            width: 40.0,
+                                            child: CachedNetworkImage(
+                                                   imageUrl: widget.post['userImage'],
+                                                   ),
+                                            decoration: new BoxDecoration(
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                          Text(
+                                            "${widget.post['user']}",
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          )
+                                        ],
+                                      ),
+                                      widget.user != null
+                                      ?widget.user['id'] == widget.post['userId']
+                                        ?PopupMenuButton(
+                                          icon:Icon(Icons.more_vert),
+                                          onSelected: (value){
+                                             switch (value) {
+                                               case 'edit':editPost();
+                                                 break;
+                                               case 'delete':showDialog( 
+                                                             context: context,
+                                                             builder: (BuildContext context)=>AlertDialog(
+                                                               title: Text('حذف پست'),
+                                                               content: Text('از حذف این پست مطمئن هستید؟'),
+                                                               actions: <Widget>[
+                                                                 FlatButton(
+                                                                   child: Text('لغو'),
+                                                                   onPressed: () {
+                                                                     Navigator.of(context).pop(false);
+                                                                   },
+                                                                  ),
+                                                                 FlatButton(
+                                                                   child : Text('حذف'),
+                                                                   onPressed: ()async {
+                                                                    Navigator.of(context).pop(false);
+                                                                    final status=await deletePost(widget.post['id']); 
+                                                                    if(status == 200){
+                                                                      widget.removePost(widget.index);
+                                                                      widget.scaffKey.currentState.showSnackBar(
+                                                                        SnackBar(
+                                                                          content: Container(
+                                                                            height: 80,
+                                                                            child:Text('پست شما با موفقیت حذف شد'),
+                                                                          )
+                                                                        )
+                                                                      );
+                                                                    }else{
+                                                                      widget.scaffKey.currentState.showSnackBar(
+                                                                        SnackBar(
+                                                                          content: Container(
+                                                                                    height: 80,
+                                                                                    child:Text('عملیات با خطا مواجه شد'),
+                                                                                  )
+                                                                        )
+                                                                      );
+                                                                    }
+                                                                   },
+                                                                  ),
+                                                               ],
+                                                             )
+                                                            );
+                                                 break;
+                                               default:
+                                             }
+                                          },
+                                          itemBuilder: (BuildContext context) {
+                                            return [
+                                               PopupMenuItem(child: Center(child: Text('ویرایش',style: TextStyle(fontSize: 13),),),value: 'edit',),
+                                               PopupMenuItem(child: Center(child: Text('حذف',style: TextStyle(fontSize: 13),),),value: 'delete',)
+                                            ];
+                                         },
+                                        )
+                                        :Text('')
+                                      :Text('')
+                                    ],
+                                  ),
+                                ),
+                                new Row(
+                                  children: <Widget>[
+                                    new Expanded(
+                                        child: CachedNetworkImage(
+                                                   imageUrl: widget.post['imageUrl'],
+                                                   fit: BoxFit.cover,
+                                                   ),
+                                    )
+                                  ],
+                                ),
+                                new Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: new Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      new Row(
+                                        children: <Widget>[
+                                           widget.user != null
+                                           ?IconButton(
+                                              icon:Icon(
+                                              liked ==false  
+                                              ?FontAwesomeIcons.heart
+                                              :FontAwesomeIcons.solidHeart,
+                                              color:
+                                              liked ==false
+                                              ?Colors.black
+                                              :Colors.redAccent
+                                              ),
+                                              onPressed: (){
+                                                setState(() {
+                                                  allowLike++;
+                                                  if(allowLike < 5){
+                                                    liked = !liked;
+                                                    liked ? likeCount++ : likeCount--;
+                                                    Post().like(widget.post['id']);
+                                                  } 
+                                                });
+                                              }
+                                             )
+                                           :Text(''), 
+                                          Text('${likeCount}  نفر این پست را پسندیدند',style: TextStyle(fontSize: 12),),
+                                          // new IconButton(icon: new Icon(FontAwesomeIcons.comment , color: Colors.black), onPressed: null),
+                                          // new IconButton(icon: new Icon(FontAwesomeIcons.paperPlane , color: Colors.black), onPressed: null)
+                                        ],
+                                      ),
+                                          Text("${widget.post['created_at']}" , style:  TextStyle(color: Colors.grey,fontSize: 12),),
+                                        // new IconButton(icon: new Icon(FontAwesomeIcons.bookmark, color: Colors.black), onPressed: null)
+                                    ],
+                                  ),
+                                ),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(8,0,14,10),
+                                      child: 
+                                      edit == true
+                                      ?Column(
+                                        children: <Widget>[
+                                          TextFormField(
+                                            textDirection: TextDirection.rtl,
+                                            key: textFormFieldKey,
+                                            validator: (String value){
+                                              if (value.length < 5) {
+                                                return 'متن نمیتواند کمتر از یک کاراکتر باشد';
+                                              }
+                                            },
+                                            style: TextStyle(
+                                              
+                                              fontSize: 13
+                                            ),
+                                            autofocus: true,
+                                            maxLines:10,
+                                            initialValue: postBody,
+                                            controller: _textEditingController,
+                                           ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: <Widget>[
+                                              OutlineButton.icon(                                              
+                                              onPressed: () {
+                                                 updatePost(widget.post['id']);
+                                                 setState(() {
+                                                  edit=false; 
+                                                 });
+                                              },
+                                              label: Text('ارسال',style: TextStyle(fontSize: 12)),
+                                              icon: Icon(Icons.edit),
+
+                                          )
+
+                                              ],
+                                             )
+                                        ],
+                                      )
+                                      :Text('${postBody}',style: TextStyle(fontSize: 13),textDirection: TextDirection.rtl,),
+                                      
+                                    ),   
+                          ],
+                  ),
+                  Divider(),
+              ],
+            );       
+  }
+
+  deletePost(post_id) async{
+    final status=await Post().deletePost(post_id);
+    return status;
+  }
+
+  editPost(){
+   setState(() {
+    edit =true; 
+   });
+  }
+
+  updatePost(post_id) async {
+    if(textFormFieldKey.currentState.validate()){
+     String newValue=textFormFieldKey.currentState.value;
+     final status= await Post().updatePost(post_id, textFormFieldKey.currentState.value);
+     if(status == 200){
+       setState(() {
+         postBody=newValue; 
+       });
+       widget.scaffKey.currentState.showSnackBar(
+                                      SnackBar(
+                                        content: Container(
+                                          height: 80,
+                                          child:Text('ویرایش با موفقیت انجام شد'),
+                                        )
+                                      )
+       );
+     }else{
+              widget.scaffKey.currentState.showSnackBar(
+                                      SnackBar(
+                                        content: Container(
+                                          height: 80,
+                                          child:Text('ویرایش با خطا مواجه شد'),
+                                        )
+                                      )
+       );            
+     }
+    }
+  }
+}
+

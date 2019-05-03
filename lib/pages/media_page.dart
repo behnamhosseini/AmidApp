@@ -1,9 +1,15 @@
-import 'package:amid_app/pages/my_panel_page.dart';
+import 'package:amid_app/pages/easyBuyPanel/easy_buy_page.dart';
+import 'package:amid_app/pages/login_page.dart';
+import 'package:amid_app/pages/market_page.dart';
+import 'package:amid_app/pages/panels/my_panel_page.dart';
+import 'package:amid_app/server/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 class MediaPage extends StatefulWidget {
+  Map userData;
+  MediaPage({this.userData});
   @override
   State<StatefulWidget> createState() {
     return MediaState();
@@ -11,7 +17,47 @@ class MediaPage extends StatefulWidget {
 
 }
 
-class MediaState extends State<MediaPage> {
+class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
+  Map user;
+  AnimationController animationController;
+  Animation<num> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    user=widget.userData;
+    animationController=AnimationController(vsync: this,duration: Duration(seconds: 3));
+    animation=Tween(begin: 0,end: 200).animate(CurvedAnimation(curve: Curves.fastOutSlowIn,parent:animationController ));
+    
+    animationController.addListener((){
+       if(animationController.isCompleted){
+         animationController.reverse();
+       }else if(animationController.isDismissed){
+         animationController.forward();
+       }
+    });
+  } 
+  Widget _logo (BuildContext context,Widget child){
+    return GestureDetector(
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child:Transform.rotate(
+                      angle:  animationController.value,
+                      child: CircleAvatar(
+                              backgroundImage: AssetImage('assets/images/logo.jpg'),
+                              radius: 60,
+                              ),
+                    ) 
+              ),
+              onTap: (){
+                Navigator.of(context).pushNamed('/amidabad');
+                 animationController.stop();
+              },
+              onLongPress:(){
+                 animationController.forward();
+              },
+            );
+  }
   @override
   Widget build(BuildContext context) {
     double width= MediaQuery.of(context).size.width /4;    
@@ -22,98 +68,139 @@ class MediaState extends State<MediaPage> {
              //Menu/Profile
              Padding(
               padding: const EdgeInsets.fromLTRB(0,24,0,60),
-              child: Card(
-              color: Color.fromRGBO(239, 57, 79, 1), 
+              child: Card(              
               elevation: 5,
-              child:Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                           //Calender/Date
-                           Padding(
-                             padding: const EdgeInsets.symmetric(vertical: 15),
-                             child: Column(
-                               children: <Widget>[                           Padding(
-                              padding: const EdgeInsets.only(bottom: 5),
-                              child: Text('${format1(Jalali.now())}',style:TextStyle(fontSize: 14,fontFamily: 'IranSans',color: Colors.white)),
-                          ),
-                             Text('${Jalali.now()}',style: TextStyle(fontSize: 14,fontFamily: 'IranSans',color: Colors.white),),],
-                             ),
-                           ),
-                           //Profile
-                           Column(
-                             children: <Widget>[
-                              Text('ابری',style: TextStyle(fontSize: 14,fontFamily: 'IranSans',color: Colors.white)),
-                              Icon(Icons.cloud_queue,size: 35,color: Colors.white),
-                              Text('℃2-',style: TextStyle(fontSize: 14,fontFamily: 'IranSans',color: Colors.white)),
-                             ],
-                           )
-                        ],
+              child:Container(
+              decoration: new BoxDecoration(
+              gradient: new  LinearGradient(
+              colors: <Color>[
+                const Color(0xff19b395),
+                const Color(0xff2980b9)
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter
+          )
+              ),
+              child: new Stack(
+                alignment: Alignment.bottomCenter,
+                children: <Widget>[
+                  new Opacity(
+                    opacity: .1,
+                    child: new Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width /3,
+                      decoration: new BoxDecoration(
+                          image: new DecorationImage(
+                              image: new AssetImage("assets/images/icon-background.png"),
+                              repeat: ImageRepeat.repeatY
+                          )
                       ),
-                      GestureDetector(
-                        child: Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: CircleAvatar(
-                            backgroundImage: AssetImage('assets/images/logo.jpg'),
-                            radius: 60,
+                    ),
+                  ),               
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                          //Calender/Date
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: Text('${format1(Jalali.now())}',style:TextStyle(fontSize: 14,fontFamily: 'IranSans',color: Colors.white)),
+                        ),
+                            Text('${Jalali.now()}',style: TextStyle(fontSize: 14,fontFamily: 'IranSans',color: Colors.white),),],
+                            ),
+                          ),
+                          //Profile
+                          Column(
+                            children: <Widget>[
+                            Text('ابری',style: TextStyle(fontSize: 14,fontFamily: 'IranSans',color: Colors.white)),
+                            Icon(Icons.cloud_queue,size: 35,color: Colors.white),
+                            Text('℃2-',style: TextStyle(fontSize: 14,fontFamily: 'IranSans',color: Colors.white)),
+                            ],
+                          )
+                      ],
+                    ),
+                    AnimatedBuilder(animation: animationController, builder: _logo),
+                    Column(
+                      textBaseline: TextBaseline.alphabetic,
+                      children: <Widget>[
+                        Text(
+                          user == null 
+                          ? 'کاربر مهمان'
+                          : '${user['name']}', 
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: "IranSans"
                           ),
                         ),
-                        onTap: (){
-                          Navigator.of(context).pushNamed('/amidabad');
-                        },
-                      ),
-                      Column(
-                        textBaseline: TextBaseline.alphabetic,
-                        children: <Widget>[
-                          Text(
-                            'مهدی دودانگه',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: "IranSans"
-                            ),
-                          ),
-                          Text(
-                            'دهیار',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: "IranSans"
-                            ),
-                          ),
-                          OutlineButton(
-                            borderSide: BorderSide(
-                              color: Colors.white
-                            ),
-                            splashColor: Colors.white,
-                            disabledBorderColor: Colors.white,
-                            highlightedBorderColor: Colors.white,
+                        Text(
+                          user == null 
+                          ? ''
+                          : '${user['roleDescription']}',
+                          style: TextStyle(
                             color: Colors.white,
-                            child: Text(
-                              'ورود به پنل',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: "IranSans"
-                              ),
+                            fontFamily: "IranSans"
+                          ),
+                        ),
+                        OutlineButton(
+                          borderSide: BorderSide(
+                            color: Colors.white
+                          ),
+                          splashColor: Colors.white,
+                          disabledBorderColor: Colors.white,
+                          highlightedBorderColor: Colors.white,
+                          color: Colors.white,
+                          child: Text(
+                          user == null 
+                          ? 'ورود'
+                          : 'ورود به پنل',
+                            
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "IranSans"
                             ),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                CupertinoPageRoute(
-                                  builder: (BuildContext context) {
-                                    return Directionality(
-                                      textDirection: TextDirection.rtl,
-                                      child: MyPanelPage(),
-                                    );
-                                  }
-                                )
-                              );
-                            },
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(
+                                builder: (BuildContext context) {
+                                  return Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: 
+                                          user == null 
+                                            ? LoginPage()
+                                            : MyPanelPage(user : user),
+                                  );
+                                }
+                              )
+                            );
+                          },
+                        ),
+                        user != null
+                        ? OutlineButton(
+                          onPressed: () {
+                            Auth().logout(context);
+                          },
+                          child: Text('خروج',style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "IranSans"
+                            ),),
                           )
-                        ],
-                      )
-                    ],
-                 ),
-              
+                          : Text('')                        
+                      ],
+                    )
+                  ],
+                ),
+          
+                    
+                  ],
+                ),
+              )
               ),
             ),
              //page 1
@@ -127,9 +214,36 @@ class MediaState extends State<MediaPage> {
                  SizedBox(
                    width:MediaQuery.of(context).size.width-40,
                    height: (MediaQuery.of(context).size.height - 160) / 4,
-                   child: Card(
-                     color:  Color.fromRGBO(239, 57, 79, 1),
-                   ),
+                   child:Card(
+                         child: Container(
+                          decoration: new BoxDecoration(
+                            gradient: new  LinearGradient(
+                                colors: <Color>[
+                                  const Color(0xff19b395),
+                                  const Color(0xff19b395)                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter
+                            )
+                          ),
+                            child: new Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: <Widget>[
+                                new Opacity(
+                                  opacity: .1,
+                                  child: new Container(
+                                  width:MediaQuery.of(context).size.width-40,
+                                  height: (MediaQuery.of(context).size.height - 160) / 4,
+                                    decoration: new BoxDecoration(
+                                        image: new DecorationImage(
+                                            image: new AssetImage("assets/images/icon-background.png"),
+                                            repeat: ImageRepeat.repeat
+                                        )
+                                    ),
+                                  ),
+                                ),
+                              ])
+                   )
+                 )
                  ),
                  Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -344,7 +458,34 @@ class MediaState extends State<MediaPage> {
                    width:MediaQuery.of(context).size.width-40,
                    height: (MediaQuery.of(context).size.height - 160) / 4,
                    child: Card(
-                     color:  Color.fromRGBO(239, 57, 79, 1),
+                     child:Container(
+                          decoration: new BoxDecoration(
+                            gradient: new  LinearGradient(
+                                colors: <Color>[
+                                  const Color(0xff19b395),
+                                  const Color(0xff19b395)                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter
+                            )
+                          ),
+                            child: new Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: <Widget>[
+                                new Opacity(
+                                  opacity: .1,
+                                  child: new Container(
+                                  width:MediaQuery.of(context).size.width-40,
+                                  height: (MediaQuery.of(context).size.height - 160) / 4,
+                                    decoration: new BoxDecoration(
+                                        image: new DecorationImage(
+                                            image: new AssetImage("assets/images/icon-background.png"),
+                                            repeat: ImageRepeat.repeat
+                                        )
+                                    ),
+                                  ),
+                                ),
+                              ])
+                    )
                    ),
                  ),
                   //First row
@@ -368,7 +509,16 @@ class MediaState extends State<MediaPage> {
                       ),
                       ),
                       onTap: (){
-                        Navigator.pushNamed(context, '/easyBuy');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: EasyBuyPage(user: user),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
                       },
                     ), 
                     GestureDetector(
@@ -388,7 +538,7 @@ class MediaState extends State<MediaPage> {
                       ),
                       ),
                       onTap: (){
-                        Navigator.pushNamed(context, '/market');
+                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {MarketPage();}));
                       },
                     ), 
                     GestureDetector(

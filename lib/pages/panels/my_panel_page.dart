@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MyPanelPage extends StatefulWidget{
+  Map user;
+  MyPanelPage({this.user});
   @override
   State<StatefulWidget> createState() {
     return MyPanelPageState();
@@ -10,6 +12,12 @@ class MyPanelPage extends StatefulWidget{
 
 class MyPanelPageState extends State<MyPanelPage>{
   int currentIndex = 1;
+  Map user;
+  @override
+  void initState() {
+    super.initState();
+    user=widget.user;
+  }
   @override
   Widget build(BuildContext context) {
     var screen = MediaQuery.of(context).size;
@@ -20,10 +28,11 @@ class MyPanelPageState extends State<MyPanelPage>{
         color: Color.fromRGBO(239, 57, 79, 1),
         height: 60,
         width: screen.width,
-        child: Row(
+        child:user['level'] == 'admin' 
+        ?Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            InkWell(
+             InkWell(
               child : Container(
                 alignment: Alignment.center,
                 height: 50,
@@ -36,12 +45,49 @@ class MyPanelPageState extends State<MyPanelPage>{
                 });
               },
             ),
-            InkWell(
-              child : Container(
+               InkWell(
+                child : Container(
                 alignment: Alignment.center,
                 height: 50,
                 width: MediaQuery.of(context).size.width / 2,
-                child: Text('جدیدترین ها', style:TextStyle(fontFamily: 'IranSans',color: Colors.white,fontSize: currentIndex == 0 ? 14 : 10),),
+                child: Text('پنل کار', style:TextStyle(fontFamily: 'IranSans',color: Colors.white,fontSize: currentIndex == 0 ? 14 : 10),),
+              ),    
+              onTap: (){
+                setState(() {
+                   currentIndex = 0;                    
+                });
+              },
+            )
+          ],
+        )
+        :user['role'] == 'user'
+         ?Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+               InkWell(
+                child : Container(
+                alignment: Alignment.center,
+                height: 50,
+                width: MediaQuery.of(context).size.width / 2,
+                child: Text('پنل کاربر معمولی', style:TextStyle(fontFamily: 'IranSans',color: Colors.white,fontSize: currentIndex == 0 ? 14 : 10),),
+                ),    
+                onTap: (){
+                  setState(() {
+                    currentIndex = 0;                    
+                  });
+                },
+              )
+            ],
+          )
+         :Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+               InkWell(
+                child : Container(
+                alignment: Alignment.center,
+                height: 50,
+                width: MediaQuery.of(context).size.width / 2,
+                child: Text('پنل کاربر فلفلی', style:TextStyle(fontFamily: 'IranSans',color: Colors.white,fontSize: currentIndex == 0 ? 14 : 10),),
               ),    
               onTap: (){
                 setState(() {
