@@ -1,6 +1,9 @@
+import 'package:amid_app/pages/user_newsfeed.page.dart';
 import 'package:flutter/material.dart';
 
 class AgriculturePage extends StatefulWidget{
+  Map user;
+  AgriculturePage({this.user});
   @override
   State<StatefulWidget> createState() {
     return AgriculturePageState();
@@ -9,12 +12,18 @@ class AgriculturePage extends StatefulWidget{
 }
 
 class AgriculturePageState extends State<AgriculturePage>{
-  int currentIndex = 1;
+  GlobalKey scaffKey=GlobalKey<ScaffoldState>();
+  String role;
+  @override
+  void initState() {
+    super.initState();
+    role='agriculturePage';
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffe0e0e0),
-      body: Text('sad'),
-    );
+       key: scaffKey,
+       body:UserNewsFeedPsge(user:widget.user,role:role,scaffkey: scaffKey,)
+     );
+    }
   }
-}

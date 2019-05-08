@@ -1,19 +1,21 @@
 import 'dart:convert';
 import 'package:amid_app/pages/home_page.dart';
+import 'package:amid_app/server/ngrok.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Auth{
+  
     Future <Map> login(Map body,context) async{
-    final response = await http.post('https://5bdd476d.ngrok.io/api/v1/login' ,body : body,headers: {'Accept':'application/json'},);
+    final response = await http.post('https://${Ngrok().ngrok}.ngrok.io/api/v1/login' ,body : body,headers: {'Accept':'application/json'},);
     var responseBody = json.decode(response.body);
     return responseBody;
     }
 
     Future <Map> signup(Map body,context) async{
-    final response = await http.post('https://5bdd476d.ngrok.io/api/v1/register' ,body : body,headers: {'Accept':'application/json'},);
+    final response = await http.post('https://${Ngrok().ngrok}.ngrok.io/api/v1/register' ,body : body,headers: {'Accept':'application/json'},);
     var responseBody = json.decode(response.body);
   
     return responseBody;
@@ -28,7 +30,7 @@ class Auth{
 }
 
  Future<bool> checkApiToken(String apiToken,context) async {
-    final response = await http.get('https://5bdd476d.ngrok.io/api/user?api_token=$apiToken' , headers: { 'Accept' : 'application/json'});
+    final response = await http.get('https://${Ngrok().ngrok}.ngrok.io/api/user?api_token=$apiToken' , headers: { 'Accept' : 'application/json'});
     var responseBody = json.decode(response.body);
     if(response.statusCode == 200){ 
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) {return Directionality(child: HomePage(userData: responseBody['data'],), textDirection: TextDirection.rtl,);}));

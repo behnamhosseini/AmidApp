@@ -6,9 +6,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 class ShopBody extends StatefulWidget{
   Map user;
   Map shop;
-  int shopId;
   List itemesCategory;
-  ShopBody({this.user,this.shop,this.itemesCategory,this.shopId});
+  ShopBody({this.user,this.shop,this.itemesCategory});
   @override
   State<StatefulWidget> createState() {
     return ShopBodyState();
@@ -26,13 +25,12 @@ class ShopBodyState extends State<ShopBody>{
   @override
   void initState() {
     super.initState();
-
+    itemesCategory = widget.itemesCategory;
   }
 
   @override
   Widget build(BuildContext context) {
     user=widget.user;
-    itemesCategory=widget.itemesCategory;
     height=MediaQuery.of(context).size.height;
     width=MediaQuery.of(context).size.width;
     return SizedBox(
@@ -111,7 +109,7 @@ class ShopBodyState extends State<ShopBody>{
                                                                  Navigator.of(context)
                                                                 .push(
                                                                   MaterialPageRoute(builder: (BuildContext context) {
-                                                                   return Directionality(child: ItemBasicPage(shop:shop,user:user,itemes:itemesCategory[index]['itemTypes']['data'][index2]['items']['data']), textDirection: TextDirection.rtl,);
+                                                                   return Directionality(child: ItemBasicPage(shop:widget.shop,user:user,itemes:itemesCategory[index]['itemTypes']['data'][index2]['items']['data']), textDirection: TextDirection.rtl,);
                                                                   }
                                                                  )
                                                                 );

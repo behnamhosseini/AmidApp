@@ -1,5 +1,5 @@
 import 'package:amid_app/pages/easyBuyPanel/item_body.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 
@@ -29,7 +29,7 @@ class ItemBasicPageState extends State<ItemBasicPage>{
     return Scaffold(
       key: scaffKey,
       backgroundColor: Color(0xffe0e0e0),
-      body:ItemBody(user:widget.user,itemes:widget.itemes),
+      body:ItemBody(user:widget.user,itemes:widget.itemes,shop: widget.shop,),
     );
   }
 }

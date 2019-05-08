@@ -1,21 +1,29 @@
+import 'package:amid_app/pages/user_newsfeed.page.dart';
 import 'package:flutter/material.dart';
 
-class MunicipalityPage extends StatefulWidget{
+class MunicipalityPanelPage extends StatefulWidget{
+  Map user;
+  MunicipalityPanelPage({this.user});
   @override
   State<StatefulWidget> createState() {
-    return MunicipalityPageState();
+    return MunicipalityPanelPageState();
   }
 
 }
 
-class MunicipalityPageState extends State<MunicipalityPage>{
-  int currentIndex = 1;
+class MunicipalityPanelPageState extends State<MunicipalityPanelPage>{
+  GlobalKey scaffKey=GlobalKey<ScaffoldState>();
+  String role;
+  @override
+  void initState() {
+    super.initState();
+    role='municipality';
+  }
   @override
   Widget build(BuildContext context) {
-    var screen = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xffe0e0e0),
-      body: Text('sad'),
-    );
+       key: scaffKey,
+       body:UserNewsFeedPsge(user:widget.user,role:role,scaffkey: scaffKey,)
+     );
+    }
   }
-}

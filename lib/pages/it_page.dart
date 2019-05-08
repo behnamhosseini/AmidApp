@@ -1,6 +1,9 @@
+import 'package:amid_app/pages/user_newsfeed.page.dart';
 import 'package:flutter/material.dart';
 
 class ItPage extends StatefulWidget{
+  Map user;
+  ItPage({this.user});
   @override
   State<StatefulWidget> createState() {
     return ItPageState();
@@ -9,13 +12,20 @@ class ItPage extends StatefulWidget{
 }
 
 class ItPageState extends State<ItPage>{
-  int currentIndex = 1;
+  GlobalKey scaffKey=GlobalKey<ScaffoldState>();
+  String role;
+  @override
+  void initState() {
+    super.initState();
+    role='it';
+  }
   @override
   Widget build(BuildContext context) {
-    var screen = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xffe0e0e0),
-      body: Text('sad'),
-    );
+       key: scaffKey,
+       body:UserNewsFeedPsge(user:widget.user,role:role,scaffkey: scaffKey,)
+     );
+    }
   }
-}
+
+ 

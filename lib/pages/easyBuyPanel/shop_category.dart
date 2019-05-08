@@ -105,13 +105,14 @@ class ShopCategoryState extends State<ShopCategory>{
                                                                         imageUrl: (shops[index]['imageUrl']),
                                                                         width: width/4,
                                                                        )),
-                                                              onTap: (){
+                                                               onTap: (){
+                                                                
                                                                 Navigator.of(context)
                                                                 .push(
                                                                   MaterialPageRoute(builder: (BuildContext context) {
                                                                    return 
                                                                    shops[index]['shops']['data'][index2]['needsCategory'] == 1
-                                                                   ?Directionality(child: ShopBasicPage(user:user,shopId:shops[index]['shops']['data'][index2]['id']), textDirection: TextDirection.rtl,)
+                                                                   ?Directionality(child: ShopBasicPage(user:widget.user,shop:shops[index]['shops']['data'][index2],   ), textDirection: TextDirection.rtl,)
                                                                    :Directionality(child: ItemBasicPage(user:user,shop:shops[index]['shops']['data'][index2],itemes:shops[index]['shops']['data'][index2]['items']['data'],), textDirection: TextDirection.rtl,);
                                                                   //  :Text('mkvmv');
                                                                   }

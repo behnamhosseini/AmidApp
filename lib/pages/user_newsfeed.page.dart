@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:amid_app/server/post.dart';
 
-class NewsFeed extends StatefulWidget {
+class UserNewsFeedPsge extends StatefulWidget {
   Map user;
-  NewsFeed({this.user});
+  String role;
+  GlobalKey<ScaffoldState> scaffkey;
+  UserNewsFeedPsge({this.user,this.role,this.scaffkey});
   @override
   State<StatefulWidget> createState() {
-    return NewsFeedState();
+    return UserNewsFeedPsgeState();
   }
 }
 
-class NewsFeedState extends State<NewsFeed> with AutomaticKeepAliveClientMixin<NewsFeed>{
-  GlobalKey scaffKey=GlobalKey<ScaffoldState>();
+class UserNewsFeedPsgeState extends State<UserNewsFeedPsge> {
   int currentIndex=0;
   List posts;
   int like;
@@ -28,9 +29,8 @@ class NewsFeedState extends State<NewsFeed> with AutomaticKeepAliveClientMixin<N
       posts.removeAt(index);
     });
   }
-
    _getPosts() async{
-    Map response =await Post().getPosts(scaffKey);
+    Map response =await Post().getUserPost(widget.role,widget.scaffkey);
      if(response['status']==200){
        setState(() {
          posts=response['data'];
@@ -44,28 +44,29 @@ class NewsFeedState extends State<NewsFeed> with AutomaticKeepAliveClientMixin<N
   }
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
-       key: scaffKey,
-       body:Padding(
-       padding: const EdgeInsets.only(bottom: 50),
-       child:
+     return 
        currentIndex == 0
-       ?Center(child: Text('در حال بارگذاری...'))
+       ?Column(
+         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+         children: <Widget>[
+           Text(''),
+           Center(child: Text('در حال بارگذاری...')),
+           LinearProgressIndicator()
+         ],
+       )
        :ListView.builder(
          itemCount: posts.length,
          itemBuilder: (BuildContext context, int index) {
-           return PostBody(post:posts[index],user:widget.user,scaffKey:scaffKey, removePost : removePost, index : index);
+           return PostBody(post:posts[index],user:widget.user,scaffKey:widget.scaffkey, removePost : removePost, index : index);
          },
-       )
-    ),
-     );}
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
+       );
+  }
 }
 
 
+
+
+  
 class PostBody extends StatefulWidget{
   Map post;
   Map user;

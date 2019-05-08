@@ -1,6 +1,7 @@
+import 'package:amid_app/Models/DataModel.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
+import 'package:scoped_model/scoped_model.dart';
 
 class ItemBody extends StatefulWidget{
   Map user;
@@ -30,7 +31,7 @@ class ItemBodyState extends State<ItemBody>{
     return ListView.builder(
            itemCount:widget.itemes.length,
            itemBuilder: (BuildContext context, int index) {
-             return ItemDetails(user:widget.user,itemes:widget.itemes,index:index);
+             return ItemDetails(user:widget.user,itemes:widget.itemes,index:index,shop:widget.shop);
            },
         ); 
      }
@@ -41,7 +42,8 @@ class ItemDetails extends StatefulWidget{
   Map user;
   List itemes;
   int index;
-  ItemDetails({this.user,this.itemes,this.index});
+  Map shop;
+  ItemDetails({this.user,this.itemes,this.index,this.shop});
 
   @override
   State<StatefulWidget> createState() {
@@ -73,7 +75,9 @@ class ItemDetails extends StatefulWidget{
   Widget build(BuildContext context) {
     height=MediaQuery.of(context).size.height;
     width=MediaQuery.of(context).size.width;
-    return Card(
+    return ScopedModelDescendant<DataModel>(
+      builder: ( context,  child,  model) {
+        return Card(
             elevation: 5,
             child:Container(
                 color: Color(0xff19b395),
@@ -104,8 +108,8 @@ class ItemDetails extends StatefulWidget{
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
-                                      Chip(label: Text('${widget.itemes[widget.index]['title']} ${widget.itemes[widget.index]['brand']}',style:TextStyle(fontFamily: 'IranSans',color: Colors.white)),backgroundColor: Colors.black,)
-                                      // Text('${itemes[index]['brand']}',style:TextStyle(fontFamily: 'IranSans'),)    
+                                      Chip(label: Text('${widget.itemes[widget.index]['title']} ${widget.itemes[widget.index]['brand']}',style:TextStyle(fontFamily: 'IranSans',color: Colors.white)),backgroundColor: Colors.black,),
+                                      // Text('${widget.itemes[widget.index]['brand']}',style:TextStyle(fontFamily: 'IranSans'),)    
                                     ],
                                   ),
                                   Row(
@@ -120,9 +124,9 @@ class ItemDetails extends StatefulWidget{
                                     children: <Widget>[
                                       Text('واحد : ',style:TextStyle(fontFamily: 'IranSans'),),                                      
                                       DropdownButton(
+
                                         items:units,
-                                        disabledHint: Text('sd'),
-                                        hint:Text(currentValue) ,
+                                        hint:Text(currentValue,style:TextStyle(fontFamily: 'IranSans',color: Colors.white)) ,
                                         onChanged: ((value){
                                           setState(() {
                                              currentValue=value;
@@ -130,14 +134,80 @@ class ItemDetails extends StatefulWidget{
                                         }
                                        ))
                                     ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: <Widget>[   
+                                      widget.itemes[widget.index]['available'] == 1
+                                      ?Row(
+                                        children: <Widget>[
+                                          GestureDetector(
+                                            child: Icon(Icons.add_circle,size: 32,),
+                                            onTap: (){
+                                              Map item = {
+                                                'id' : widget.itemes[widget.index]['id'],
+                                                'title' : widget.itemes[widget.index]['title'],
+                                                'brand' : widget.itemes[widget.index]['brand'],
+                                                'price' : widget.itemes[widget.index]['price'],
+                                                'unit' : currentValue,
+                                                'shopName' : widget.shop['title'],
+                                                'amount' : 1,
+                                              };
+                                              model.addToShoppingCart(item);
+                                            },
+                                          ),
+
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                                              child: model.shoppingCartId.contains(widget.itemes[widget.index]['id'])
+                                              ? Text('${model.shoppingCart[model.shoppingCartId.indexOf(widget.itemes[widget.index]['id'])]['amount']}',style: TextStyle(color: Colors.white),)
+                                              :Text('0',style: TextStyle(color: Colors.white)),
+                                            ),
+                                          ),
+
+                                          GestureDetector(
+                                            child: Icon(Icons.remove_circle,size: 32),
+                                            onTap: (){
+                                                Map item = {
+                                                'id' : widget.itemes[widget.index]['id'],
+                                               };
+                                              model.removefromShoppingCart(
+                                                item
+                                              );
+                                            },
+                                          )
+                                          
+                                        ],
+                                      )
+                                      :Text('ناموجود',style: TextStyle(color: Colors.amber))
+                                    ],
                                   )
+
+                                  
                                 ],
                         ),
                         ),
+                        SizedBox(
+                          width: width*0.30,
+                          height:(height)/4.8 ,
+                          child:CachedNetworkImage(
+                            imageUrl: widget.itemes[widget.index]['imageUrl'],
+                            placeholder:(context ,String d){
+                              return  CircularProgressIndicator();
+                            },
+                          )
+                        )
                       ],
                       )
+                      //itemImageDa
+                     
                     ])
             ),
+    );
+  
+      },
     );
   }
  }

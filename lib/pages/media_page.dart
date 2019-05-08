@@ -1,7 +1,21 @@
+import 'package:amid_app/pages/agriculture_page.dart';
+import 'package:amid_app/pages/animal_husbandry_page.dart';
+import 'package:amid_app/pages/council_page.dart';
+import 'package:amid_app/pages/counter_page.dart';
+import 'package:amid_app/pages/doctor_page.dart';
 import 'package:amid_app/pages/easyBuyPanel/easy_buy_page.dart';
+import 'package:amid_app/pages/english_institue_page.dart';
+import 'package:amid_app/pages/gallery_page.dart';
+import 'package:amid_app/pages/health_page.dart';
+import 'package:amid_app/pages/it_page.dart';
+import 'package:amid_app/pages/library_page.dart';
 import 'package:amid_app/pages/login_page.dart';
 import 'package:amid_app/pages/market_page.dart';
+import 'package:amid_app/pages/municipality_page.dart';
 import 'package:amid_app/pages/panels/my_panel_page.dart';
+import 'package:amid_app/pages/postbank_page.dart';
+import 'package:amid_app/pages/school_page.dart';
+import 'package:amid_app/pages/sports_page.dart';
 import 'package:amid_app/server/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -267,7 +281,16 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                       height: (MediaQuery.of(context).size.height - 62) / 4,
                     ),
                     onTap: (){
-                      Navigator.pushNamed(context, '/municipality');
+                       Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: MunicipalityPanelPage(user: user,),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
                     },
                   ), 
                  GestureDetector(
@@ -287,7 +310,16 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                    ),
                    ),
                    onTap: (){
-                     Navigator.pushNamed(context, '/council');
+                      Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: CouncilPage(user: user,),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
                    },
                  ), 
                  GestureDetector(
@@ -307,7 +339,16 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                    ),
                    ),
                    onTap: (){
-                     Navigator.pushNamed(context, '/postbank');
+                    Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: PostbankPage(user: user,),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
                    },
                  ), 
 
@@ -333,7 +374,16 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                    ),
                    ),
                    onTap: (){
-                     Navigator.pushNamed(context, '/school');
+                     Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: SchoolPage(user: user,),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
                    },
                  ), 
                  GestureDetector(
@@ -353,7 +403,16 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                    ),
                    ),
                    onTap: (){
-                     Navigator.pushNamed(context, '/englishInstitue');
+                     Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: EnglishInstituePage(user: user,),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
                    },
                  ), 
                  GestureDetector(
@@ -373,7 +432,16 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                    ),
                    ),
                    onTap: (){
-                     Navigator.pushNamed(context, '/library');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: LibraryPage(user: user,),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
                    },
                  ), 
 
@@ -399,7 +467,16 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                    ),
                    ),
                    onTap: (){
-                     Navigator.pushNamed(context, '/health');
+                     Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: HealthPage(user: user,),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
                    },
                  ), 
                  GestureDetector(
@@ -419,7 +496,16 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                    ),
                    ),
                    onTap: (){
-                     Navigator.pushNamed(context, '/doctor');
+                     Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: DoctorPage(user: user,),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
                    },
                  ), 
                  GestureDetector(
@@ -439,7 +525,17 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                    ),
                    ),
                    onTap: (){
-                     Navigator.pushNamed(context, '/sports');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: SportsPage(user: user,),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
+
                    },
                  ),
             ],),    
@@ -604,7 +700,16 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                       ),
                       ),
                       onTap: (){
-                        Navigator.pushNamed(context, '/animalHusbandry');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: AnimalHusbandryPage(user: user,),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
                       },
                     ), 
                     GestureDetector(
@@ -624,7 +729,17 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                       ),
                       ),
                       onTap: (){
-                        Navigator.pushNamed(context, '/agriculture');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: AgriculturePage(user: user,),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
+
                       },
                     ), 
 
@@ -650,7 +765,17 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                       ),
                       ),
                       onTap: (){
-                        Navigator.pushNamed(context, '/it');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: ItPage(user: user,),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
+
                       },
                     ),
                     GestureDetector(
@@ -670,7 +795,17 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                       ),
                       ),
                       onTap: (){
-                        Navigator.pushNamed(context, '/counter');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: CounterPage(user: user,),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
+
                       },
                     ),
                     GestureDetector(
@@ -690,7 +825,17 @@ class MediaState extends State<MediaPage> with SingleTickerProviderStateMixin {
                       ),
                       ),
                       onTap: (){
-                        Navigator.pushNamed(context, '/gallery');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                             return Directionality(
+                                     child: GalleryPage(),
+                                     textDirection: TextDirection.rtl,
+                                    );
+                            }
+                          )
+                        );
+
                       },
                     ),
                   ],),    
